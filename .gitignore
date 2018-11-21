@@ -1,0 +1,17 @@
+dist/*
+dist/
+dist
+build/*
+build/
+build
+mxgames.egg-info/*
+mxgames.egg-info/
+mxgames.egg-info
+*.egg-info/*
+*.egg-info/
+*.egg-info
+mxgames/__pycache__/*
+mxgames/__pycache__/
+mxgames/__pycache__
+mxgames/__pycache__/*.pyc
+*.pyc
