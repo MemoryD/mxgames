@@ -10,9 +10,9 @@ import pygame
 from pygame.locals import *
 from sys import exit
 
-FOUR_NEIGH = [(0, 1), (1, 0), (0, -1), (-1, 0)]
-EIGHT_NEIGH = FOUR_NEIGH + [(1, 1), (1, -1), (-1, 1), (-1, -1)]
-
+FOUR_NEIGH = {"left": (0, -1), "right": (0, 1), "up": (-1, 0), "down": (1, 0)}
+EIGHT_NEIGH = list(FOUR_NEIGH.values()) + [(1, 1), (1, -1), (-1, 1), (-1, -1)]
+DIRECTION = {pygame.K_UP: "up", pygame.K_LEFT: "left", pygame.K_RIGHT: "right", pygame.K_DOWN: "down"}
 
 # def get_index(start, end):
 #     if isinstance(start, tuple) and isinstance(end, tuple):
@@ -23,6 +23,15 @@ EIGHT_NEIGH = FOUR_NEIGH + [(1, 1), (1, -1), (-1, 1), (-1, -1)]
 #         return [(i, j) for i in range(start) for j in range(*end)]
 #     else:
 #         return [(i, j) for i in range(start) for j in range(end)]
+
+
+# class Vector(object):
+#     def __init__(self, x=0.0, y=0.0):
+#         self.x = x
+#         self.y = y
+
+#     def move(x, y):
+        
 
 class Game(object):
     def __init__(self, title, size, fps=30):

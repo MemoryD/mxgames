@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 '''
 @name: life
-@author: Memory
+@author: Memory&Xinxin
 @date: 2018/11/19
 @document: {"F11": 全屏,
             "空格": 暂停游戏,

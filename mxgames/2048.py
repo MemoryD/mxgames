@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 '''
 @name: 2048
-@author: Memory
+@author: Memory&Xinxin
 @date: 2018/11/21
 @document: {"F11": 全屏,
             "方向键": 移动方块
@@ -10,13 +10,12 @@
 '''
 import pygame
 from mxgames import game
-from random import randint, choice
+from random import choice
 
 ROWS = 4
-COLOR = {2: 0xff7500, 4: 0xdb5a6b, 8: 0xb35c44, 16: 0xafff00, 32: 0xaf00af,
-        64: 0x00ffff, 128: 0x177cb0, 256: 0xed5736, 512: 0xa4e2c6, 1024: 0xf2ecde,
-        2048: 0xff2f0f, 4096: 0x36563c, 8192: 0xd6ecf0, "bg": 0x2f2f2f, "num": (10, 10, 10)}
-DIRECTION = {pygame.K_UP: "up", pygame.K_LEFT: "left", pygame.K_RIGHT: "right", pygame.K_DOWN: "down"}
+COLOR = {2: 0xd6ecf0, 4: 0xf3e398, 8: 0x6e9b87, 16: 0xD1ABC0, 32: 0x8fa8a5,
+        64: 0x59777f, 128: 0xb8d3a8, 256: 0xA2A3A2, 512: 0x465D4B, 1024: 0xbaa19d,
+        2048: 0xd3977b, 4096: 0xb36d61, 8192: 0x73222b, "bg": 0x1f1f1f, "num": (10, 10, 10)}
 ALL_INDEX = [(i, j) for i in range(ROWS) for j in range(ROWS)]
 
 
@@ -26,7 +25,7 @@ class Game_2048(game.Game):
         self.world = [[0 for i in range(4)] for j in range(4)]
         self.side = size[0] // ROWS
         self.font = pygame.font.SysFont('consolas', 54)
-        self.bind_key(list(DIRECTION.keys()), self.move)
+        self.bind_key(list(game.DIRECTION.keys()), self.move)
         self.create()
         self.create()
 
@@ -52,7 +51,7 @@ class Game_2048(game.Game):
 
     def move(self, key):
         is_move = False
-        direction = DIRECTION[key]
+        direction = game.DIRECTION[key]
         self.transposition(direction)
         temp_world = []
         for x in range(ROWS):
@@ -66,9 +65,9 @@ class Game_2048(game.Game):
             row.extend([0, 0, 0, 0])
             row = row[0:4]
             temp_world.append(row)
-            for j in range(ROWS):
-                if row[j] != self.world[x][j]:
-                    is_move = True
+            if row != self.world[x]:
+                is_move = True
+
         self.world = temp_world
         self.transposition(direction)
         if is_move:
@@ -94,7 +93,7 @@ class Game_2048(game.Game):
 if __name__ == '__main__':
     print('''
     Welcome to 2048!
-    press ARROW KEY to play game.
+    press ARROW KEYS to play game.
     ''')
-    game = Game_2048("2048", (480, 480))
-    game.run()
+    game_2048 = Game_2048("2048", (480, 480))
+    game_2048.run()
