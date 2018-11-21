@@ -23,3 +23,23 @@ $ python -m mxgames.[gamename]
 ```
 
 `[gamename]` 是游戏名。
+
+
+
+#### 示例
+
+- **life**
+
+  ```shell
+  $ python -m mxgames.life
+  ```
+
+  ![life](https://github.com/MemoryD/mxgames/blob/master/screenshot/life.gif)
+
+- **2048**
+
+  ```shell
+  $ python -m mxgames.2048
+  ```
+
+
