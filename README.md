@@ -19,7 +19,7 @@ $ python -m mxgames
 以下命令开始一个游戏：
 
 ```shell
-$ pyton -m mxgames.[gamename]
+$ python -m mxgames.[gamename]
 ```
 
 `[gamename]` 是游戏名。
