@@ -36,7 +36,7 @@ $ python -m mxgames.[gamename]
   $ python -m mxgames.life
   ```
 
-  ![life](https://github.com/MemoryD/mxgames/blob/master/screenshot/life.gif)
+  ![life](https://raw.githubusercontent.com/MemoryD/mxgames/master/screenshot/life.gif)
 
 - #### **2048**
 
@@ -46,7 +46,7 @@ $ python -m mxgames.[gamename]
   $ python -m mxgames.2048
   ```
 
-  ![life](https://github.com/MemoryD/mxgames/blob/master/screenshot/2048.gif)
+  ![2048](https://raw.githubusercontent.com/MemoryD/mxgames/master/screenshot//2048.gif)
 
 - #### snake
 
@@ -56,5 +56,21 @@ $ python -m mxgames.[gamename]
   $ python -m mxgames.snake
   ```
 
-  ![life](https://github.com/MemoryD/mxgames/blob/master/screenshot/snake.gif)
+  ![snake](https://raw.githubusercontent.com/MemoryD/mxgames/master/screenshot/snake.gif)
+
+- #### **AI snake**
+
+  自动寻路的贪吃蛇，基于近似的哈密顿环，加入了一些优化，游戏无需操作，但是可以按空格键暂停，游戏运行后会有以下三种结果：
+
+  - 吃满整个屏幕。
+  - 没吃满屏幕就陷入死路。
+  - 没吃满屏幕，陷入了无限循环，不断绕圈圈。
+
+  ```shell
+  $ python -m mxgames.ai_snake
+  ```
+
+  ![snake](https://raw.githubusercontent.com/MemoryD/mxgames/master/screenshot/ai_snake.gif)
+
+  
 

@@ -17,7 +17,8 @@ ROWS = 50
 SCREEN_SIZE = (500, 500)                                                # 屏幕的尺寸
 COLOR = [0xff0000, 0x00ff00, 0x0000ff, 0xffff00, 0xff00ff, 0x00ffff]    # 颜色
 UPDATE_TIME = 1500                                                      # 刷新间隔
-ALL_INDEX =  [(i,j) for i in range(ROWS) for j in range(ROWS)]
+ALL_INDEX = [(i, j) for i in range(ROWS) for j in range(ROWS)]
+
 
 class Life(game.Game):
     def __init__(self, title, size, rows, fps=30):

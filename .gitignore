@@ -10,6 +10,9 @@ mxgames.egg-info
 *.egg-info/*
 *.egg-info/
 *.egg-info
+test
+tesr/
+test/*
 mxgames/__pycache__/*
 mxgames/__pycache__/
 mxgames/__pycache__
