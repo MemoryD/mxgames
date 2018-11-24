@@ -64,13 +64,14 @@ $ python -m mxgames.[gamename]
 
   - 吃满整个屏幕。
   - 没吃满屏幕就陷入死路。
-  - 没吃满屏幕，陷入了无限循环，不断绕圈圈。
+  - 没吃满屏幕，陷入了无限循环，不断绕圈。
 
   ```shell
   $ python -m mxgames.ai_snake
   ```
 
-  ![snake](https://raw.githubusercontent.com/MemoryD/mxgames/master/screenshot/ai_snake.gif)
+  ![ai_snake](https://raw.githubusercontent.com/MemoryD/mxgames/master/screenshot/ai_snake.gif)
 
   
 
+  

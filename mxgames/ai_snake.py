@@ -13,7 +13,7 @@ from mxgames import game
 import pygame
 
 ROWS = 14
-SIDE = 15
+SIDE = 16
 WIDTH = (2*ROWS-1) * SIDE
 SCREEN_SIZE = (WIDTH, WIDTH)
 
@@ -23,25 +23,36 @@ UP_DOWN = [(-1, 0), (1, 0)]
 COLOR = {"bg": 0x000000, "head": 0xff0000, "body": 0xffffff, "food": 0x00ff00}
 
 
-class Hamilton(game.Game):
+class AI_Snake(game.Game):
     def __init__(self, title, size, rows, fps=50):
-        super(Hamilton, self).__init__(title, size, fps)
+        super(AI_Snake, self).__init__(title, size, fps)
         self.rows = rows
         self.side = size[0] // (2*self.rows-1)
-        self.snake = [(0, i) for i in range(7, 0, -1)]
-        self.world = [[0 for i in range(self.rows)] for j in range(self.rows)]
-        for i in range(1, 6):
-            self.snake.append((1, i))
+        self.snake = [(0, i) for i in range(2, 0, -1)]
         self.food = (3, 5)
-        self.last_food = [self.food]
         self.path = {}
         self.create_food()
         self.shortcut = 1
         self.path = self.update_path()
+        self.step = 0
+        self.last_step = 0
         self.bind_key(pygame.K_SPACE, self.pause)
 
     def pause(self, key):
         self.is_pause = not self.is_pause
+        now = self.snake[0]
+        last = now
+        num = len(self.path)
+        for i in range(num-1):
+            for event in pygame.event.get():
+                self.handle_input(event)
+            self.draw_side(0x0000ff, *now)
+            x, y = last[0] + now[0], last[1] + now[1]
+            self.draw_side(0x0000ff, x, y, 1)
+            last = now
+            now = self.path[now]
+            self.timer.tick(100)
+        self.draw_side(0x0000ff, *now)
 
     def draw_side(self, color, x, y, rat=2):
         rect = pygame.Rect(y*self.side*rat, x*self.side*rat, self.side, self.side)
@@ -49,21 +60,11 @@ class Hamilton(game.Game):
         pygame.display.update(rect)
 
     def show_dead(self):
-        print("end")
-        timer = pygame.time.Clock()
-        last = self.snake[0]
-        self.draw_side(COLOR["head"], *last)
-        for body in self.snake:
-            for event in pygame.event.get():
-                self.handle_input(event)
-            self.draw_side(COLOR["head"], *body)
-            x, y = last[0] + body[0], last[1] + body[1]
-            self.draw_side(COLOR["head"], x, y, 1)
-            last = body
-            timer.tick(30)
+        print("Total time: %.2f s" % (pygame.time.get_ticks() / 1000))
+        self.draw(0, True)
+        self.end = True
 
     def create_food(self):
-        self.last_food.append(self.food)
         if len(self.path) > 6:
             empty = list(self.path.keys())
             length = len(empty) // 3
@@ -73,7 +74,6 @@ class Hamilton(game.Game):
 
         if empty == []:
             self.show_dead()
-            self.end = True
             return
         self.food = choice(empty)
         while self.food in self.snake:
@@ -98,13 +98,21 @@ class Hamilton(game.Game):
                     DIRE.remove(last_dire)
                     DIRE.insert(0, last_dire)
 
+            neigh = []
             for d in DIRE:
                 to = (now[0]+d[0], now[1]+d[1])
                 if not self.check_pos(to):
                     continue
                 if to in walk or to in wait or to in wall:
                     continue
-                wait[to] = now
+                neigh.append(to)
+
+            for n in neigh:
+                if n == self.food:
+                    neigh.remove(n)
+                    neigh.insert(0, n)
+            for n in neigh:
+                wait[n] = now
 
         if now != food:
             return None
@@ -155,44 +163,29 @@ class Hamilton(game.Game):
                 now = head
                 continue
             now = path[now]
-
-        world = [[0 for i in range(self.rows)] for j in range(self.rows)]
-        now = self.snake[0]
-        num = 1
-        while now != self.snake[-1]:
-            world[now[0]][now[1]] = num
-            num += 1
-            now = path[now]
-        world[now[0]][now[1]] = num
-
-        self.world = world
         return path
 
-    def eat_ok(self, path):
-        if path is None or path == {} or len(self.snake) > (self.rows * self.rows) // 2:
-            return False
-        now = self.snake[0]
-        world = self.world
-        last_num = world[now[0]][now[1]]
+    def simluate(self, path):
+        snake = list(self.snake)
+        now = snake[0]
         while now != self.food:
             now = path[now]
-            if world[now[0]][now[1]] <= last_num or world[now[0]][now[1]] == 0:
-                return False
-            last_num = world[now[0]][now[1]]
-        return True
+            snake.insert(0, now)
+            snake.pop()
+        p = self.shortest(snake[:-1], snake[0], snake[-1])
+        return p is not None and p != {}
 
     def update_path(self):
-        p2 = self.longest(self.snake[:-1], self.snake[0], self.snake[-1])
-        if len(self.snake) > (self.rows * self.rows) // 2:
+        p1, p2 = None, None
+        if len(self.snake) > self.rows*(self.rows-2):
+            p2 = self.longest(self.snake[:-1], self.snake[0], self.snake[-1])
             return p2
-        p1 = self.shortest(self.snake, self.snake[0], self.food)
-        if p1 is None:
-            return p2
-        elif p2 is None:
-            return None
 
-        if self.eat_ok(p1):
-            return p1
+        p1 = self.shortest(self.snake[:-1], self.snake[0], self.food)
+        if p1 is not None and p1 != {}:
+            if self.simluate(p1):
+                return p1
+        p2 = self.longest(self.snake[:-1], self.snake[0], self.snake[-1])
         return p2
 
     def update(self, current_time):
@@ -202,41 +195,46 @@ class Hamilton(game.Game):
             self.path = self.update_path()
         if self.path is None or self.path == {}:
             self.show_dead()
-            self.end = True
             return
         next_head = self.path.pop(self.snake[0])
         self.snake.insert(0, next_head)
-
+        self.step += 1
         if self.food == self.snake[0]:
             p = self.update_path()
             if p is None:
                 self.snake.pop(0)
+                self.step -= 1
                 self.path = self.update_path()
             else:
+                self.last_step = self.step
+                print("Snake: %d , step: %d, average step: %.2f"%(len(self.snake), self.step, self.step/len(self.snake)))
                 self.create_food()
-                print("Snake: ", len(self.snake))
-                p1 = self.shortest(self.snake, self.snake[0], self.food)
-                if self.eat_ok(p1):
-                    self.path = p1
+                self.path = p
         else:
             self.snake.pop()
+        # if self.step - self.last_step > 3*self.rows*self.rows:
+        #     self.show_dead()
+        #     return
 
         if self.path is not None and self.food not in list(self.path.keys()):
             self.path = self.update_path()
 
-    def draw(self, current_time):
+    def draw(self, current_time, end=False):
         if self.end or self.is_pause:
             return
         self.screen.fill(COLOR["bg"])
         last = self.snake[0]
-        self.draw_side(COLOR["body"], *last)
-        for i in range(1, len(self.snake)):
-            body = self.snake[i]
-            self.draw_side(COLOR["body"], *body)
+        color = COLOR["head"] if end else COLOR["body"]
+        self.draw_side(color, *last)
+        for body in self.snake[1:]:
+            self.draw_side(color, *body)
             x, y = last[0] + body[0], last[1] + body[1]
-            self.draw_side(COLOR["body"], x, y, 1)
+            self.draw_side(color, x, y, 1)
             last = body
-        self.draw_side(COLOR["food"], *self.food)
+            if end:
+                self.timer.tick(self.fps)
+        if not end:
+            self.draw_side(COLOR["food"], *self.food)
         pygame.display.update()
 
 
@@ -245,5 +243,5 @@ if __name__ == '__main__':
     Welcome to AI Snake!
     press SPACE to pause.
     ''')
-    ha = Hamilton("AI Snake", (SCREEN_SIZE), ROWS)
+    ha = AI_Snake("AI Snake", (SCREEN_SIZE), ROWS)
     ha.run()
