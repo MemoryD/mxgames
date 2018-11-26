@@ -7,13 +7,13 @@
 @document: {"F11": 全屏,
             }
 '''
-from random import choice
+from random import choice, randint
 from collections import OrderedDict
 from mxgames import game
 import pygame
 
-ROWS = 14
-SIDE = 16
+ROWS = 8
+SIDE = 15
 WIDTH = (2*ROWS-1) * SIDE
 SCREEN_SIZE = (WIDTH, WIDTH)
 
@@ -28,49 +28,30 @@ class AI_Snake(game.Game):
         super(AI_Snake, self).__init__(title, size, fps)
         self.rows = rows
         self.side = size[0] // (2*self.rows-1)
-        self.snake = [(0, i) for i in range(2, 0, -1)]
-        self.food = (3, 5)
-        self.path = {}
-        self.create_food()
-        self.shortcut = 1
-        self.path = self.update_path()
         self.step = 0
         self.last_step = 0
+        self.snake = [(0, i) for i in range(2, 0, -1)]
+        self.world = [[0 for i in range(self.rows)] for j in range(self.rows)]
+        self.food = (3, 5)
+        self.shortcut = {}
+        self.is_shortcut = False
+        self.path = {}
+        self.init_snake()
+        self.create_food()
         self.bind_key(pygame.K_SPACE, self.pause)
 
-    def pause(self, key):
-        self.is_pause = not self.is_pause
-        now = self.snake[0]
-        last = now
-        num = len(self.path)
-        for i in range(num-1):
-            for event in pygame.event.get():
-                self.handle_input(event)
-            self.draw_side(0x0000ff, *now)
-            x, y = last[0] + now[0], last[1] + now[1]
-            self.draw_side(0x0000ff, x, y, 1)
-            last = now
-            now = self.path[now]
-            self.timer.tick(100)
-        self.draw_side(0x0000ff, *now)
-
-    def draw_side(self, color, x, y, rat=2):
-        rect = pygame.Rect(y*self.side*rat, x*self.side*rat, self.side, self.side)
-        self.screen.fill(color, rect)
-        pygame.display.update(rect)
-
-    def show_dead(self):
-        print("Total time: %.2f s" % (pygame.time.get_ticks() / 1000))
-        self.draw(0, True)
-        self.end = True
+    def init_snake(self):
+        path = self.build_circle([])
+        while path is None:
+            x = randint(0, self.rows-1)
+            y = randint(0, self.rows-3)
+            snake = [(x, i) for i in range(y, y+3)]
+            path = self.build_circle(snake)
+        self.snake = snake
+        self.path = path
 
     def create_food(self):
-        if len(self.path) > 6:
-            empty = list(self.path.keys())
-            length = len(empty) // 3
-            empty = empty[:length]
-        else:
-            empty = [(i, j) for i in range(self.rows) for j in range(self.rows) if (i, j) not in self.snake and (i, j) != self.food]
+        empty = [(i, j) for i in range(self.rows) for j in range(self.rows) if (i, j) not in self.snake and (i, j) != self.food]
 
         if empty == []:
             self.show_dead()
@@ -79,7 +60,22 @@ class AI_Snake(game.Game):
         while self.food in self.snake:
             self.food = choice(empty)
 
-    def shortest(self, wall, head, food):
+    def show_dead(self):
+        print("Total time: %.2f s" % (pygame.time.get_ticks() / 1000))
+        self.draw(0, True)
+        self.end = True
+
+    # def cmp(self, now, to):
+    #     food_num = self.world[self.food[0]][self.food[1]]
+    #     to_num = self.world[to[0]][to[1]]
+    #     now_num = self.world[now[0]][now[1]]
+    #     if now_num < to_num < food_num:
+    #         return True
+    #     if to_num < food_num < now_num:
+    #         return True
+    #     return False
+
+    def shortest(self, wall, head, food, func=None):
         walk = {}
         wait = OrderedDict()
         now = (-1, -1)
@@ -98,22 +94,15 @@ class AI_Snake(game.Game):
                     DIRE.remove(last_dire)
                     DIRE.insert(0, last_dire)
 
-            neigh = []
             for d in DIRE:
                 to = (now[0]+d[0], now[1]+d[1])
                 if not self.check_pos(to):
                     continue
                 if to in walk or to in wait or to in wall:
                     continue
-                neigh.append(to)
-
-            for n in neigh:
-                if n == self.food:
-                    neigh.remove(n)
-                    neigh.insert(0, n)
-            for n in neigh:
-                wait[n] = now
-
+                # if func is not None and not func(now, to):
+                #     continue
+                wait[to] = now
         if now != food:
             return None
 
@@ -159,67 +148,119 @@ class AI_Snake(game.Game):
             return None
         now = head
         while now != food:
-            if self.extension(path, now, wall):
+            if self.extension(path, now, wall+[food]):
                 now = head
                 continue
             now = path[now]
+
         return path
 
-    def simluate(self, path):
-        snake = list(self.snake)
+    def build_circle(self, snake):
+        if len(snake) < 3:
+            return None
+        wall = snake[1:-1]
+        path = self.longest(wall, snake[0], snake[-1])
+        if path is None or path is {}:
+            return None
+        if len(path) - 1 != self.rows * self.rows - len(snake):
+            return None
+        for i in range(1, len(snake)):
+            path[snake[i]] = snake[i-1]
+
+        num = 1
         now = snake[0]
-        while now != self.food:
+        self.world[now[0]][now[1]] = num
+        now = path[now]
+        while now != snake[0]:
+            num += 1
+            self.world[now[0]][now[1]] = num
             now = path[now]
-            snake.insert(0, now)
-            snake.pop()
-        p = self.shortest(snake[:-1], snake[0], snake[-1])
-        return p is not None and p != {}
 
-    def update_path(self):
-        p1, p2 = None, None
-        if len(self.snake) > self.rows*(self.rows-2):
-            p2 = self.longest(self.snake[:-1], self.snake[0], self.snake[-1])
-            return p2
+        return path
 
-        p1 = self.shortest(self.snake[:-1], self.snake[0], self.food)
-        if p1 is not None and p1 != {}:
-            if self.simluate(p1):
-                return p1
-        p2 = self.longest(self.snake[:-1], self.snake[0], self.snake[-1])
-        return p2
+    def shortcut_ok(self, path):
+        if path is None or path == {}:
+            return False
+        circle = False
+        snake = list(self.snake)
+        head = snake[0]
+        last_num = self.world[head[0]][head[1]]
+        while head != self.food:
+            head = path[head]
+            snake.insert(0, head)
+            if head != self.food:
+                snake.pop()
+            tail = snake[-1]
+            head_num = self.world[head[0]][head[1]]
+            tail_num = self.world[tail[0]][tail[1]]
+
+            if last_num > tail_num:
+                if head_num < last_num:
+                    if not circle:
+                        circle = True
+                    else:
+                        return False
+                if head_num > tail_num:
+                    return False
+            else:
+                if head_num < last_num or head_num > tail_num:
+                    return False
+            last_num = self.world[head[0]][head[1]]
+        return True
 
     def update(self, current_time):
         if self.end or self.is_pause:
             return
-        if self.path == {}:
-            self.path = self.update_path()
-        if self.path is None or self.path == {}:
-            self.show_dead()
-            return
-        next_head = self.path.pop(self.snake[0])
+        if self.shortcut != {}:
+            next_head = self.shortcut.pop(self.snake[0])
+        else:
+            next_head = self.path[self.snake[0]]
+            self.is_shortcut = False
+
         self.snake.insert(0, next_head)
         self.step += 1
         if self.food == self.snake[0]:
-            p = self.update_path()
-            if p is None:
-                self.snake.pop(0)
-                self.step -= 1
-                self.path = self.update_path()
-            else:
-                self.last_step = self.step
-                print("Snake: %d , step: %d, average step: %.2f"%(len(self.snake), self.step, self.step/len(self.snake)))
-                self.create_food()
-                self.path = p
+            self.last_step = self.step
+            print("Snake: %d , step: %d, average step: %.2f"%(len(self.snake), self.step, self.step/len(self.snake)))
+            self.create_food()
+            path = self.build_circle(self.snake)
+            if path is not None:
+                self.path = path
         else:
             self.snake.pop()
-        # if self.step - self.last_step > 3*self.rows*self.rows:
-        #     self.show_dead()
-        #     return
 
-        if self.path is not None and self.food not in list(self.path.keys()):
-            self.path = self.update_path()
+        if self.is_shortcut:
+            return
+        path = self.shortest(self.snake, self.snake[0], self.food)
+        if self.shortcut_ok(path):
+            self.shortcut = path
+            self.is_shortcut = True
 
-    def draw(self, current_time, end=False):
+    def draw_side(self, color, x, y, rat=2):
+        rect = pygame.Rect(y*self.side*rat, x*self.side*rat, self.side, self.side)
+        self.screen.fill(color, rect)
+        pygame.display.update(rect)
+
+    def draw_path(self, path, head, food):
+        '''测试使用
+        '''
+        now = head
+        last = now
+
+        while now != food:
+            for event in pygame.event.get():
+                self.handle_input(event)
+            self.draw_side(0x0000ff, *now)
+            x, y = last[0] + now[0], last[1] + now[1]
+            self.draw_side(0x0000ff, x, y, 1)
+            last = now
+            now = path[now]
+            self.timer.tick(30)
+        x, y = last[0] + now[0], last[1] + now[1]
+        self.draw_side(0x0000ff, x, y, 1)
+        self.draw_side(0x0000ff, *now)
+
+    def draw(self, current_time=0, end=False):
         if self.end or self.is_pause:
             return
         self.screen.fill(COLOR["bg"])
@@ -243,5 +284,5 @@ if __name__ == '__main__':
     Welcome to AI Snake!
     press SPACE to pause.
     ''')
-    ha = AI_Snake("AI Snake", (SCREEN_SIZE), ROWS)
-    ha.run()
+    snake = AI_Snake("AI Snake", (SCREEN_SIZE), ROWS)
+    snake.run()

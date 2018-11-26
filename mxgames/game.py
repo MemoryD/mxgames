@@ -59,6 +59,9 @@ class Game(object):
     def bind_click(self, button, action):
         self.clicks[button] = action
 
+    def pause(self, key):
+        self.is_pause = not self.is_pause
+
     def set_fps(self, fps):
         self.fps = fps
 
