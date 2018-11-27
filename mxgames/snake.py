@@ -12,9 +12,9 @@ import pygame
 from mxgames import game
 from random import choice
 
-ROWS = 50
+ROWS = 40
 COLOR = {"bg": 0x000000, "head": 0xffffff, "body": 0xffffff, "food": 0x00ff00}
-SPEED = 100
+SPEED = 120
 
 
 class Snake(game.Game):
@@ -24,7 +24,7 @@ class Snake(game.Game):
         self.speed = speed
         self.side = size[0] // self.rows
         self.food = (8, 3)
-        self.last_food = [self.food]
+        self.last_food = []
         self.direction = ["right"]
         self.snake = [(12, i) for i in range(18, 12, -1)]
         self.screen.fill(COLOR["bg"])
@@ -50,7 +50,7 @@ class Snake(game.Game):
 
     def show_dead(self):
         timer = pygame.time.Clock()
-        for body in self.snake[1:]:
+        for body in self.snake:
             self.draw_snake(0xff0000, *body)
             timer.tick(30)
 
@@ -62,7 +62,6 @@ class Snake(game.Game):
         self.direction.append(game.DIRECTION[key])
 
     def move(self, snake, direction):
-        print(self.snake[0], self.snake[-1], self.direction)
         to = game.FOUR_NEIGH[direction]
         head = (snake[0][0]+to[0], snake[0][1]+to[1])
         x, y = head
@@ -93,7 +92,8 @@ class Snake(game.Game):
         else:
             self.last_food.pop(0)
         self.snake.insert(0, self.next_head)
-
+        for food in self.last_food:
+            self.draw_snake(0xff6622, *food)
         if len(self.direction) > 1:
             self.direction.pop(0)
 
@@ -106,6 +106,6 @@ if __name__ == '__main__':
     Welcome to Snake!
     press ARROW KEYS to play game.
     ''')
-    snake = Snake("Snake", (500, 500), ROWS, SPEED)
+    snake = Snake("Snake", (480, 480), ROWS, SPEED)
     snake.bind_key(list(game.DIRECTION.keys()), snake.turn)
     snake.run()

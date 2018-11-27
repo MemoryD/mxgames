@@ -37,9 +37,6 @@ class Life(game.Game):
                 if randint(1, 5) == 1:
                     self.lifes[i][j] = True                             # 设置为活的
 
-    def pause(self, key):
-        self.is_pause = not self.is_pause
-
     def reverse(self, x, y):                                            # 翻转，死的活，活的死
         i = x // self.side
         j = y // self.side

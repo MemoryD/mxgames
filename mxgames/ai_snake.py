@@ -3,7 +3,7 @@
 '''
 @name: AI Snake
 @author: Memory&Xinxin
-@date: 2018/11/24
+@date: 2018/11/27
 @document: {"F11": 全屏,
             "SPACE": 暂停
             }

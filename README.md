@@ -70,4 +70,14 @@ $ python -m mxgames.[gamename]
 
   
 
+- #### **tetris**
+
+  俄罗斯方块，也不用多说了.......因为偷懒就没有做一个小界面显示下一个方块，分数打印在命令行。
+
+  ```shell
+  python -m mxgames.tetris
+  ```
+
+  ![tetris](https://raw.githubusercontent.com/MemoryD/mxgames/master/screenshot/tetris.gif)
+
   

@@ -40,6 +40,7 @@ class Game(object):
         self.screen = pygame.display.set_mode(size, 0, 32)
         pygame.display.set_caption(title)
         self.keys = {}
+        self.keys_up = {}
         self.clicks = {}
         self.timer = pygame.time.Clock()
         self.fps = fps
@@ -55,6 +56,13 @@ class Game(object):
                 self.keys[k] = action
         elif isinstance(key, int):
             self.keys[key] = action
+
+    def bind_key_up(self, key, action):
+        if isinstance(key, list):
+            for k in key:
+                self.keys_up[k] = action
+        elif isinstance(key, int):
+            self.keys_up[key] = action
 
     def bind_click(self, button, action):
         self.clicks[button] = action
@@ -78,6 +86,9 @@ class Game(object):
                     self.screen = pygame.display.set_mode(self.size, pygame.FULLSCREEN, 32)
                 else:
                     self.screen = pygame.display.set_mode(self.size, 0, 32)
+        if event.type == pygame.KEYUP:
+            if event.key in self.keys_up.keys():
+                self.keys_up[event.key](event.key)
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button in self.clicks.keys():
                 self.clicks[event.button](*event.pos)
