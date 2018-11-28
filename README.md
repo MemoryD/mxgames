@@ -80,4 +80,15 @@ $ python -m mxgames.[gamename]
 
   ![tetris](https://raw.githubusercontent.com/MemoryD/mxgames/master/screenshot/tetris.gif)
 
+- #### **to_hell**
+
+  完整名字是 To Hell with Johnny，国内一般翻译为 **是男人就下一百层**，左右两个方向键就能控制，挺有趣...
+
+  ```shell
+  python -m mxgames.to_hell
+  ```
+
+  ![to_hell](https://raw.githubusercontent.com/MemoryD/mxgames/master/screenshot/to_hell.gif)
+
   
+
