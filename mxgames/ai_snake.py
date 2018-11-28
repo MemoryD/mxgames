@@ -292,6 +292,7 @@ if __name__ == '__main__':
     print('''
     Welcome to AI Snake!
     press SPACE to pause.
+    press F11 to fullscreen.
     ''')
     snake = AI_Snake("AI Snake", (SCREEN_SIZE), ROWS)
     snake.run()

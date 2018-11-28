@@ -13,7 +13,7 @@ from mxgames import game
 from random import choice
 
 ROWS = 40
-COLOR = {"bg": 0x000000, "head": 0xffffff, "body": 0xffffff, "food": 0x00ff00}
+COLOR = {"bg": 0x000000, "dead": 0xff0000, "body": 0xffffff, "food": 0x00ff00, "last_food": 0xff6622}
 SPEED = 120
 
 
@@ -27,19 +27,14 @@ class Snake(game.Game):
         self.last_food = []
         self.direction = ["right"]
         self.snake = [(12, i) for i in range(18, 12, -1)]
-        self.screen.fill(COLOR["bg"])
-        pygame.display.update()
-        self.draw_snake(COLOR["head"], *self.snake[0])
-        for body in self.snake[1:]:
-            self.draw_snake(COLOR["body"], *body)
         self.next_head = self.snake[0]
+        self.bind_key(pygame.K_SPACE, self.pause)
 
     def create_food(self):
         self.last_food.append(self.food)
         empty = [(i, j) for i in range(self.rows) for j in range(self.rows) if (i, j) not in self.snake and (i, j) != self.food]
         if empty == []:
             self.show_dead()
-            self.end = True
             return
         self.food = choice(empty)
 
@@ -49,10 +44,9 @@ class Snake(game.Game):
         pygame.display.update(rect)
 
     def show_dead(self):
-        timer = pygame.time.Clock()
-        for body in self.snake:
-            self.draw_snake(0xff0000, *body)
-            timer.tick(30)
+        self.is_draw = True
+        self.draw(0, end=True)
+        self.end = True
 
     def turn(self, key):
         d1 = game.FOUR_NEIGH[game.DIRECTION[key]]
@@ -72,39 +66,55 @@ class Snake(game.Game):
         return head
 
     def update(self, current_time):
-        if current_time < self.last_time + self.speed or self.end:
+        if current_time < self.last_time + self.speed or self.end or self.is_pause:
             return
         if self.direction == []:
             return
         self.last_time = current_time
+        self.is_draw = True
 
         self.next_head = self.move(self.snake, self.direction[0])
         if self.next_head is None:
             self.show_dead()
-            self.end = True
             return
-        self.draw_snake(COLOR["body"], *self.snake[0])
-        self.draw_snake(COLOR["head"], *self.next_head)
-        self.draw_snake(COLOR["food"], *self.food)
         if self.last_food == [] or self.last_food[0] != self.snake[-1]:
-            self.draw_snake(COLOR["bg"], *self.snake[-1])
             self.snake.pop()
         else:
             self.last_food.pop(0)
         self.snake.insert(0, self.next_head)
-        for food in self.last_food:
-            self.draw_snake(0xff6622, *food)
+
         if len(self.direction) > 1:
             self.direction.pop(0)
 
         if self.food == self.snake[0]:
+            self.score += 1
             self.create_food()
+
+    def draw(self, current_time, end=False):
+        if not self.is_draw or self.end or self.is_pause:
+            return
+        self.is_draw = False
+        self.screen.fill(COLOR["bg"])
+        self.draw_score((0x3c, 0x3c, 0x3c))
+        for body in self.snake:
+            if not end:
+                self.draw_snake(COLOR["body"], *body)
+            else:
+                self.draw_snake(COLOR["dead"], *body)
+                self.timer.tick(30)
+
+        self.draw_snake(COLOR["food"], *self.food)
+        for food in self.last_food:
+            self.draw_snake(COLOR["last_food"], *food)
+        pygame.display.update()
 
 
 if __name__ == '__main__':
     print('''
     Welcome to Snake!
     press ARROW KEYS to play game.
+    press SPACE to pause.
+    press F11 to fullscreen.
     ''')
     snake = Snake("Snake", (480, 480), ROWS, SPEED)
     snake.bind_key(list(game.DIRECTION.keys()), snake.turn)

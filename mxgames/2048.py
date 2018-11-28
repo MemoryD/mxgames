@@ -94,6 +94,7 @@ if __name__ == '__main__':
     print('''
     Welcome to 2048!
     press ARROW KEYS to play game.
+    press F11 to fullscreen.
     ''')
     game_2048 = Game_2048("2048", (480, 480))
     game_2048.run()

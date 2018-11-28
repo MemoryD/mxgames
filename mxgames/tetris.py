@@ -21,7 +21,7 @@ TETRIS_CODE = [[102, 102, 102, 102], [15, 8738, 15, 8738],
               [612, 99, 612, 99], [1122, 54, 1122, 54],
               [114, 610, 39, 562]]
 MOVE = {pygame.K_LEFT: (0, -1), pygame.K_RIGHT: (0, 1), pygame.K_DOWN: (1, 0)}
-SCORE = {1: 100, 2: 300, 3: 500, 4: 800}
+SCORE = {0: 0, 1: 10, 2: 30, 3: 50, 4: 80}
 COLOR = [0xff0000, 0x00ff00, 0xffff00, 0x6677ff, 0xff32ff, 0x00ffff]    # 颜色
 
 
@@ -81,13 +81,13 @@ class World(game.Game):
         super(World, self).__init__(title, size, fps)
         self.side = SIDE
         self.speed = 600
-        self.score = 0
         self.world = [[0 for i in range(GAME_COL)] for j in range(GAME_ROW)]
         self.tetris = Tetris()
         self.next = Tetris()
         self.dire = -1
         self.is_down = False
         self.move_time = pygame.time.get_ticks()
+        # self.score_font = pygame.font.SysFont("Calibri", 130, True)
         self.bind_key(list(MOVE.keys()), self.move)
         self.bind_key(pygame.K_UP, self.transfer)
         self.bind_key(pygame.K_SPACE, self.pause)
@@ -126,9 +126,7 @@ class World(game.Game):
             else:
                 world.append(row)
         self.world = world
-        if score > 0:
-            self.score += SCORE[score]
-            print("Score: %d" % (self.score))
+        self.score += SCORE[score]
         row = self.world[0]
         filrow = list(filter(lambda x: x > 0, row))
         if filrow != []:
@@ -174,6 +172,7 @@ class World(game.Game):
         self.is_draw = False
 
         self.screen.fill(0x000000)
+        self.draw_score((0x3c, 0x3c, 0x3c))
         for i in range(GAME_ROW):
             for j in range(GAME_COL):
                 if self.world[i][j] > 0:
@@ -190,6 +189,7 @@ if __name__ == '__main__':
     Welcome to Tetris!
     press ARROW KEYS to play game.
     press SPACE to pause.
+    press F11 to fullscreen.
     ''')
     world = World("Tetris", (350, 500))
     world.run()

@@ -14,24 +14,6 @@ FOUR_NEIGH = {"left": (0, -1), "right": (0, 1), "up": (-1, 0), "down": (1, 0)}
 EIGHT_NEIGH = list(FOUR_NEIGH.values()) + [(1, 1), (1, -1), (-1, 1), (-1, -1)]
 DIRECTION = {pygame.K_UP: "up", pygame.K_LEFT: "left", pygame.K_RIGHT: "right", pygame.K_DOWN: "down"}
 
-# def get_index(start, end):
-#     if isinstance(start, tuple) and isinstance(end, tuple):
-#         return [(i, j) for i in range(*start) for j in range(*end)]
-#     elif isinstance(start, tuple):
-#         return [(i, j) for i in range(*start) for j in range(end)]
-#     elif isinstance(end, tuple):
-#         return [(i, j) for i in range(start) for j in range(*end)]
-#     else:
-#         return [(i, j) for i in range(start) for j in range(end)]
-
-
-# class Vector(object):
-#     def __init__(self, x=0.0, y=0.0):
-#         self.x = x
-#         self.y = y
-
-#     def move(x, y):
-        
 
 class Game(object):
     def __init__(self, title, size, fps=30):
@@ -44,11 +26,13 @@ class Game(object):
         self.clicks = {}
         self.timer = pygame.time.Clock()
         self.fps = fps
+        self.score = 0
         self.end = False
         self.fullscreen = False
         self.last_time = pygame.time.get_ticks()
         self.is_pause = False
         self.is_draw = True
+        self.score_font = pygame.font.SysFont("Calibri", 130, True)
 
     def bind_key(self, key, action):
         if isinstance(key, list):
@@ -102,8 +86,15 @@ class Game(object):
             self.update(pygame.time.get_ticks())
             self.draw(pygame.time.get_ticks())
 
-    def is_end():
-        return False
+    def draw_score(self, color, rect=None):
+        score = self.score_font.render(str(self.score), True, color)
+        if rect is None:
+            r = self.screen.get_rect()
+            rect = score.get_rect(center=r.center)
+        self.screen.blit(score, rect)
+
+    def is_end(self):
+        return self.end
 
     def update(self, current_time):
         pass
@@ -120,7 +111,7 @@ class Test(Game):
     def press_enter(self):
         print("press enter")
 
-    def draw(self):
+    def draw(self, current_time):
         pass
 
 
