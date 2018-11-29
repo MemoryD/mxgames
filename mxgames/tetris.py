@@ -131,6 +131,7 @@ class World(game.Game):
         filrow = list(filter(lambda x: x > 0, row))
         if filrow != []:
             self.end = True
+            self.is_draw = True
             return True
         self.tetris = self.next
         self.next = Tetris()
@@ -181,6 +182,8 @@ class World(game.Game):
         for x, y in tetris:
             self.draw_side(self.tetris.color, x, y)
 
+        if self.end:
+            self.draw_score((0x3c, 0x3c, 0x3c))
         pygame.display.update()
 
 

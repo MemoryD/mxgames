@@ -106,6 +106,8 @@ class Snake(game.Game):
         self.draw_snake(COLOR["food"], *self.food)
         for food in self.last_food:
             self.draw_snake(COLOR["last_food"], *food)
+        if end:
+            self.draw_score((0x3c, 0x3c, 0x3c))
         pygame.display.update()
 
 

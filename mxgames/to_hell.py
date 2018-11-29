@@ -43,7 +43,7 @@ class Barrier(object):
         self.frag_time = 12
         self.score = False
         self.belt_dire = 0
-        self.belt_dire = -1 if self.type == BELT_LEFT else 1
+        self.belt_dire = pygame.K_LEFT if self.type == BELT_LEFT else pygame.K_RIGHT
         left = randint(0, SCREEN_WIDTH - 7 * SIDE - 1)
         top = SCREEN_HEIGHT - SIDE - 1
         self.rect = pygame.Rect(left, top, 7*SIDE, SIDE)
@@ -134,7 +134,8 @@ class Hell(game.Game):
             if ba.type == FRAGILE:
                 ba.frag_touch = True
             elif ba.type == BELT_LEFT or ba.type == BELT_RIGHT:
-                self.body.left += ba.belt_dire
+                # self.body.left += ba.belt_dire
+                self.move_man(ba.belt_dire)
             break
 
         top = self.body.top

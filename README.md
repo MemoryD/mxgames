@@ -92,3 +92,14 @@ $ python -m mxgames.[gamename]
 
   
 
+- #### **Mine**
+
+  扫雷，以前 Windows 上自带的游戏，也是一款生命力非常强的游戏，现在还有世界排名。我做的这个是 20 * 20 大小，66 个地雷，大概就是比中等难度难一点。操作方式没有变，可以左右键一起按。剩余地雷数和所用时间显示在标题栏。
+
+  ```shell
+  python -m mxgames.mine
+  ```
+
+  ![mine](https://raw.githubusercontent.com/MemoryD/mxgames/master/screenshot/mine.gif)
+
+  
