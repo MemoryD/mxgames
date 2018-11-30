@@ -93,7 +93,6 @@ if __name__ == '__main__':
     Welcome to Life Game!
     press SPACE to pause game.
     click LEFT MOUSE BUTTON to create a life, or death a life.
-    press F11 to fullscreen.
     ''')
     life = Life("life", SCREEN_SIZE, ROWS)
     life.run()

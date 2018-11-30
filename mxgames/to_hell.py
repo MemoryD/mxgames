@@ -186,7 +186,6 @@ if __name__ == '__main__':
     Welcome to To Hell with Memory!
     press LEFT and RIGHT arrow key to play game.
     press SPACE to pause.
-    press F11 to fullscreen.
     ''')
     hell = Hell("To Hell with Memory", (SCREEN_WIDTH, SCREEN_HEIGHT))
     hell.run()

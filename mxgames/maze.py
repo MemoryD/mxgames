@@ -138,7 +138,6 @@ if __name__ == '__main__':
     print('''
     Welcome to Maze!
     press ARROW KEYS to play game.
-    press F11 to fullscreen.
     ''')
     maze = Maze("Maze", (SCREEN_WIDTH, SCREEN_HEIGHT))
     maze.run()

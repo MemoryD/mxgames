@@ -116,7 +116,6 @@ if __name__ == '__main__':
     Welcome to Snake!
     press ARROW KEYS to play game.
     press SPACE to pause.
-    press F11 to fullscreen.
     ''')
     snake = Snake("Snake", (480, 480), ROWS, SPEED)
     snake.bind_key(list(game.DIRECTION.keys()), snake.turn)

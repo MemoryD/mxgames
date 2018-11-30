@@ -118,3 +118,15 @@ $ python -m mxgames.gamename
   ```
 
   ![maze](https://raw.githubusercontent.com/MemoryD/mxgames/master/screenshot/maze.gif)
+
+
+
+- #### **Gobang**
+
+  五子棋，规则很简单，谁先达成五子连珠的就获胜，黑为先手，这里没有加入更多复杂的先后手规则。
+
+  ```shell
+  python -m mxgames.gobang
+  ```
+
+  ![gobang](https://raw.githubusercontent.com/MemoryD/mxgames/master/screenshot/gobang.gif)

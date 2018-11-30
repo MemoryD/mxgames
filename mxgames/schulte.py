@@ -95,7 +95,6 @@ if __name__ == '__main__':
     print('''
     Welcome to Schulte!
     click LEFT MOUSE BUTTON to play game.
-    press F11 to fullscreen.
     ''')
     sculte = Schulte("Schulte", (SCREEN_WIDTH, SCREEN_HEIGHT))
     sculte.run()

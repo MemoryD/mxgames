@@ -193,7 +193,6 @@ if __name__ == '__main__':
     Welcome to Tetris!
     press ARROW KEYS to play game.
     press SPACE to pause.
-    press F11 to fullscreen.
     ''')
     world = World("Tetris", (350, 500))
     world.run()

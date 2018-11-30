@@ -221,7 +221,6 @@ if __name__ == '__main__':
     click LEFT MOUSE BUTTON to open a cell.
     click RIGHT MOUSE BUTTON to mark a mine.
     click the LEFT and RIGHT MOUSE BUTTONS simultaneously to open all the cells around.
-    press F11 to fullscreen.
     ''')
     mine = Mine("Mine", (SCREEN_WIDTH, SCREEN_HEIGHT))
     mine.run()
