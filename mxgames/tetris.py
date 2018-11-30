@@ -22,7 +22,7 @@ TETRIS_CODE = [[102, 102, 102, 102], [15, 8738, 15, 8738],
               [114, 610, 39, 562]]
 MOVE = {pygame.K_LEFT: (0, -1), pygame.K_RIGHT: (0, 1), pygame.K_DOWN: (1, 0)}
 SCORE = {0: 0, 1: 10, 2: 30, 3: 50, 4: 80}
-COLOR = [0xff0000, 0x00ff00, 0xffff00, 0x6677ff, 0xff32ff, 0x00ffff]    # 颜色
+COLOR = [0xff2222, 0x11ff11, 0xffcc33, 0x6677ff, 0xff32ff, 0x33ffff]    # 颜色
 
 
 class Tetris(object):
@@ -87,7 +87,6 @@ class World(game.Game):
         self.dire = -1
         self.is_down = False
         self.move_time = pygame.time.get_ticks()
-        # self.score_font = pygame.font.SysFont("Calibri", 130, True)
         self.bind_key(list(MOVE.keys()), self.move)
         self.bind_key(pygame.K_UP, self.transfer)
         self.bind_key(pygame.K_SPACE, self.pause)
@@ -104,7 +103,7 @@ class World(game.Game):
         self.dire = -1
 
     def transfer(self, key):
-        if self.end:
+        if self.end or self.is_pause:
             return
         self.tetris.transfer(key)
         self.is_draw = True
@@ -164,6 +163,8 @@ class World(game.Game):
 
     def draw_side(self, color, x, y):
         rect = pygame.Rect(y*self.side, x*self.side, self.side, self.side)
+        self.screen.fill(0xffffff, rect)
+        rect = pygame.Rect(y*self.side+1, x*self.side+1, self.side-2, self.side-2)
         self.screen.fill(color, rect)
         pygame.display.update(rect)
 

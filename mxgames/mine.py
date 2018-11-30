@@ -74,15 +74,17 @@ class Grid(object):
 
 
 class Mine(game.Game):
-    def __init__(self, title, size, fps=30):
+    def __init__(self, title, size, fps=25):
         super(Mine, self).__init__(title, size, fps)
         self.left_mine = MINE_NUM
         self.flag_num = 0
+        self.left_btn = False
+        self.right_btn = False
         self.start_time = 0
         self.world = []
         self.init_mine()
-        self.bind_click(1, self.click)
-        self.bind_click(3, self.flag)
+        self.bind_click(1, self.click_left)
+        self.bind_click(3, self.click_right)
 
     def init_mine(self):
         for i in range(ROWS):
@@ -119,11 +121,15 @@ class Mine(game.Game):
             self.world[i][j].type = NUMBER
             self.world[i][j].number = num
 
-    def click(self, x, y):
+    def click_left(self, x, y):
         if self.start_time == 0:
             self.start_time = pygame.time.get_ticks()
-        i, j = y // SIDE, x // SIDE
-        self.open(i, j)
+        self.left_btn = True
+
+    def click_right(self, x, y):
+        if self.start_time == 0:
+            self.start_time = pygame.time.get_ticks()
+        self.right_btn = True
 
     def open(self, i, j):
         if i < 0 or j < 0 or i >= ROWS or j >= COLUMS:
@@ -161,44 +167,43 @@ class Mine(game.Game):
         mine.draw()
         pygame.display.update()
 
-    def flag(self, x, y):
-        if self.start_time == 0:
-            self.start_time = pygame.time.get_ticks()
-
-        i, j = y // SIDE, x // SIDE
-        if not self.world[i][j].open:
-            self.world[i][j].flag = not self.world[i][j].flag
-            if self.world[i][j].flag:
-                self.flag_num += 1
-            else:
-                self.flag_num -= 1
-            if self.world[i][j].type == MINE:
-                if self.world[i][j].flag:
-                    self.left_mine -= 1
-                else:
-                    self.left_mine += 1
-            self.is_draw = True
-
     def update(self, current_time):
         if self.end:
             return
-        if self.left_mine == 0 and self.flag_num == MINE_NUM:
-            self.show_end(True)
         if self.start_time == 0:
             time = 0
         else:
             time = (pygame.time.get_ticks() - self.start_time) / 1000
         title = "Mine ---- mine: %d   time: %.2f" % (self.left_mine, time)
         pygame.display.set_caption(title)
-        btn = pygame.mouse.get_pressed()
-        if btn == (1, 0, 1):
-            x, y = pygame.mouse.get_pos()
-            x, y = y // SIDE, x // SIDE
-            if not self.world[x][y].open or self.world[x][y].type != NUMBER:
-                return
-            for neigh in EIGHT_NEIGH:
-                i, j = x + neigh[0], y + neigh[1]
-                self.open(i, j)
+
+        x, y = pygame.mouse.get_pos()
+        i, j = y // SIDE, x // SIDE
+        if self.left_btn and self.right_btn:
+            if self.world[i][j].open and self.world[i][j].type == NUMBER:
+                for neigh in EIGHT_NEIGH:
+                    x, y = i + neigh[0], j + neigh[1]
+                    self.open(x, y)
+        elif self.left_btn:
+            self.open(i, j)
+        elif self.right_btn:
+            if not self.world[i][j].open:
+                self.world[i][j].flag = not self.world[i][j].flag
+                if self.world[i][j].flag:
+                    self.flag_num += 1
+                else:
+                    self.flag_num -= 1
+                if self.world[i][j].type == MINE:
+                    if self.world[i][j].flag:
+                        self.left_mine -= 1
+                    else:
+                        self.left_mine += 1
+                self.is_draw = True
+
+        if self.left_mine == 0 and self.flag_num == MINE_NUM:
+            self.show_end(True)
+        self.left_btn = False
+        self.right_btn = False
 
     def draw(self, current_time):
         if not self.is_draw or self.end:
