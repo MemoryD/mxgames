@@ -24,9 +24,11 @@ for game in games:
     print("    "+game)
 
 print('''
-run python -m mxgames.[gamename] to start a game.
+run python -m mxgames.gamename to start a game.
+gamename is a one of the games above.
+
 for example:
-    python -m mxgames.life
+    python -m mxgames.2048
 
 have fun with it!
 ''')

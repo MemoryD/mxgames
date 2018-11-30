@@ -15,6 +15,15 @@ EIGHT_NEIGH = list(FOUR_NEIGH.values()) + [(1, 1), (1, -1), (-1, 1), (-1, -1)]
 DIRECTION = {pygame.K_UP: "up", pygame.K_LEFT: "left", pygame.K_RIGHT: "right", pygame.K_DOWN: "down"}
 
 
+def hex2rgb(color):
+    b = color % 256
+    color = color >> 8
+    g = color % 256
+    color = color >> 8
+    r = color % 256
+    return (r, g, b)
+
+
 class Game(object):
     def __init__(self, title, size, fps=30):
         self.size = size
@@ -124,10 +133,12 @@ def click(x, y):
 
 
 def main():
+    print(hex2rgb(0xfcf040))
     game = Test("game", (640, 480))
     game.bind_key(pygame.K_SPACE, press_space)
     game.bind_click(1, click)
     game.run()
+
 
 if __name__ == '__main__':
     main()

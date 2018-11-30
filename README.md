@@ -19,10 +19,10 @@ $ python -m mxgames
 以下命令开始一个游戏：
 
 ```shell
-$ python -m mxgames.[gamename]
+$ python -m mxgames.gamename
 ```
 
-`[gamename]` 是游戏名。
+`gamename` 是游戏名。
 
 
 
@@ -68,8 +68,6 @@ $ python -m mxgames.[gamename]
 
   ![ai_snake](https://raw.githubusercontent.com/MemoryD/mxgames/master/screenshot/ai_snake.gif)
 
-  
-
 - #### **tetris**
 
   俄罗斯方块，也不用多说了.......因为偷懒就没有做一个小界面显示下一个方块，不过这样显得更有挑战性。
@@ -90,8 +88,6 @@ $ python -m mxgames.[gamename]
 
   ![to_hell](https://raw.githubusercontent.com/MemoryD/mxgames/master/screenshot/to_hell.gif)
 
-  
-
 - #### **Mine**
 
   扫雷，以前 Windows 上自带的游戏，也是一款生命力非常强的游戏，现在还有世界排名。我做的这个是 20 * 20 大小，66 个地雷，大概就是比中等难度难一点。操作方式没有变，可以左右键一起按。剩余地雷数和所用时间显示在标题栏。
@@ -102,4 +98,15 @@ $ python -m mxgames.[gamename]
 
   ![mine](https://raw.githubusercontent.com/MemoryD/mxgames/master/screenshot/mine.gif)
 
-  
+
+- #### **Schulte**
+
+  舒尔特方格，是一个简单的用来测试和训练注意力水平的方法，方法是按顺序点击数字，计算点完全部 25 个数字所需的时间。具体的可以去查资料。
+
+  ```shell
+  python -m mxgames.schulte
+  ```
+
+  ![schulte](https://raw.githubusercontent.com/MemoryD/mxgames/master/screenshot/schulte.gif)
+
+

@@ -26,12 +26,11 @@ OPEN = 1
 EMPTY = 2
 NUMBER = 3
 MINE = 4
-COLOR = {CLOSE: 0x5555ff, OPEN: 0xaaaaff, NUMBER: 0xaaaaff, MINE: 0x222222}
+COLOR = {CLOSE: 0x5555ff, OPEN: 0xaaaaff, MINE: 0x222222}
 FOUR_NEIGH = [(0, -1), (0, 1), (-1, 0), (1, 0)]
 EIGHT_NEIGH = FOUR_NEIGH + [(1, 1), (1, -1), (-1, 1), (-1, -1)]
-# NUM_COLOR = [0x3377ff,  0xffff22, 0x22ffff, 0x22ff22, 0xff2222, 0xff22ff, 0xff9922, 0x2222ff]
-NUM_COLOR = [(0x33, 0x77, 0xff), (0xff, 0x22, 0x22), (0xff, 0x22, 0xff), (0xff, 0xff, 0x22), 
-(0x22, 0xff, 0xff), (0x22, 0xff, 0x22), (0xff, 0x99, 0x22), (0x22, 0x22, 0xff)]
+_NUM_COLOR_ = [0x3377ff, 0xff2222, 0xff22ff, 0xffff22,  0x22ffff, 0x22ff22, 0xff9922, 0x2222ff]
+NUM_COLOR = [game.hex2rgb(color) for color in _NUM_COLOR_]
 
 
 class Grid(object):
@@ -74,7 +73,7 @@ class Grid(object):
 
 
 class Mine(game.Game):
-    def __init__(self, title, size, fps=25):
+    def __init__(self, title, size, fps=15):
         super(Mine, self).__init__(title, size, fps)
         self.left_mine = MINE_NUM
         self.flag_num = 0
@@ -174,7 +173,7 @@ class Mine(game.Game):
             time = 0
         else:
             time = (pygame.time.get_ticks() - self.start_time) / 1000
-        title = "Mine ---- mine: %d   time: %.2f" % (self.left_mine, time)
+        title = "Mine ---- mine: %d   time: %.2f s" % (self.left_mine, time)
         pygame.display.set_caption(title)
 
         x, y = pygame.mouse.get_pos()
