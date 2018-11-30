@@ -109,4 +109,12 @@ $ python -m mxgames.gamename
 
   ![schulte](https://raw.githubusercontent.com/MemoryD/mxgames/master/screenshot/schulte.gif)
 
+- #### **Maze**
 
+  迷宫，大小是 30 * 30，使用 Prim 算法生成，还算有一定难度。使用方向键控制。
+
+  ```shell
+  python -m mxgames.maze
+  ```
+
+  ![maze](https://raw.githubusercontent.com/MemoryD/mxgames/master/screenshot/maze.gif)

@@ -3,9 +3,9 @@
 '''
 @name: Schulte
 @author: Memory&Xinxin
-@date: 2018/11/29
+@date: 2018/11/30
 @document: {"F11": 全屏,
-            "鼠标左键": 打开一个格子,
+            "鼠标左键": 点击数字,
             }
 '''
 import pygame
@@ -75,11 +75,11 @@ class Schulte(game.Game):
 
         if self.wrong != (-1, -1):
             i, j = self.wrong
-            rect = pygame.Rect(j*SIDE+1, i*SIDE+1, SIDE-1, SIDE-1)
+            rect = pygame.Rect(j*SIDE+2, i*SIDE+2, SIDE-2, SIDE-2)
             self.screen.fill(0xff2222, rect)
         elif self.correct != (-1, -1):
             i, j = self.correct
-            rect = pygame.Rect(j*SIDE+1, i*SIDE+1, SIDE-1, SIDE-1)
+            rect = pygame.Rect(j*SIDE+2, i*SIDE+2, SIDE-2, SIDE-2)
             self.screen.fill(0x00ff00, rect)
 
         for i in range(5):
