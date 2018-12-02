@@ -123,10 +123,24 @@ $ python -m mxgames.gamename
 
 - #### **Gobang**
 
-  五子棋，规则很简单，谁先达成五子连珠的就获胜，黑为先手，这里没有加入更多复杂的先后手规则。
+  五子棋，规则很简单，谁先达成五子连珠的就获胜。这是一个双人游戏（因为不会写AI），黑为先手，这里没有加入更多复杂的先后手规则。
 
   ```shell
   python -m mxgames.gobang
   ```
 
   ![gobang](https://raw.githubusercontent.com/MemoryD/mxgames/master/screenshot/gobang.gif)
+
+- #### **Sudoku**
+
+  数独，就算没玩过也听过吧........最后要保证每行，每列，每个 3*3 的格子里都没有重复的数字，并且填满所有格子。算法保证每题都一定有解，但不一定是唯一解（太麻烦了，我们又不是用来比赛，随便一点）。
+
+  因为时间太长，所以把动态图的重复帧删掉了，所以才会是这样子的效果。
+
+  ```shell
+  python -m mxgames.sudoku
+  ```
+
+  ![sudoku](https://raw.githubusercontent.com/MemoryD/mxgames/master/screenshot/sudoku.gif)
+
+  

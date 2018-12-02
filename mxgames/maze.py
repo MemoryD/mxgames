@@ -96,8 +96,6 @@ class Maze(game.Game):
                 self.maze[r][c].walls[dire] = True
                 self.maze[x][y].walls[DIRE[dire]] = True
 
-        self.maze[0][0].walls[pygame.K_LEFT] = True
-        self.maze[ROWS-1][COLUMS-1].walls[pygame.K_RIGHT] = True
         self.maze[0][0].type = "body"
         self.maze[ROWS-1][COLUMS-1].type = "end"
 

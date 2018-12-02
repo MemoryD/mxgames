@@ -16,6 +16,7 @@ SIDE = 30
 SCREEN_WIDTH = ROWS * SIDE
 SCREEN_HEIGHT = ROWS * SIDE
 
+EMPTY = -1
 BLACK = 0x000000
 WHITE = 0xffffff
 DIRE = [(1, 0), (0, 1), (1, 1), (1, -1)]
@@ -24,7 +25,7 @@ DIRE = [(1, 0), (0, 1), (1, 1), (1, -1)]
 class Gobang(game.Game):
     def __init__(self, title, size, fps=15):
         super(Gobang, self).__init__(title, size, fps)
-        self.board = [[-1 for i in range(ROWS)] for j in range(ROWS)]
+        self.board = [[EMPTY for i in range(ROWS)] for j in range(ROWS)]
         self.select = (-1, -1)
         self.black = True
         self.draw_board()
@@ -34,6 +35,8 @@ class Gobang(game.Game):
         if self.end:
             return
         i, j = y // SIDE, x // SIDE
+        if self.board[i][j] != EMPTY:
+            return
         self.board[i][j] = BLACK if self.black else WHITE
         self.draw_chess(self.board[i][j], i, j)
         self.black = not self.black
@@ -60,7 +63,7 @@ class Gobang(game.Game):
         return None
 
     def check_chess(self, i, j):
-        if self.board[i][j] == -1:
+        if self.board[i][j] == EMPTY:
             return None
         color = self.board[i][j]
         for dire in DIRE:
